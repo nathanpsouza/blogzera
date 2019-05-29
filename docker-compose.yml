@@ -1,0 +1,28 @@
+version: '3'
+services:
+  ###
+  # services
+  ###
+  postgres:
+    image: postgres:9.6-alpine
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    env_file:
+      - 'env'
+
+  app:
+    build: ./blogzera
+    command: /bin/bash -c "bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+        - ./blogzera:/app
+    ports:
+        - "3000:3000"
+    env_file:
+        - 'env'
+    depends_on:
+        - postgres
+    tty: true
+    stdin_open: true
+
+volumes:
+  postgres:
